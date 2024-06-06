@@ -1,10 +1,17 @@
+import sys
 import ply.lex as lex # for token definition
 import ply.yacc as yacc # for parsing rules
 
-tokens = ('NUMBER','PLUS','MINUS')
+sys.set_int_max_str_digits(1_000_000_000)
+tokens = ('NUMBER','PLUS','MINUS','MULTIPLY','DIVIDE','POWERED','LPAREN','RPAREN')
 
 t_PLUS = r'\+'
 t_MINUS = r'-'
+t_MULTIPLY = r'\*'
+t_DIVIDE = r'/'
+t_POWERED = r'\^'
+t_LPAREN = r'\('
+t_RPAREN = r'\)'
 
 def t_NUMBER(t):
     r'\d+'
@@ -21,8 +28,6 @@ def t_error(t):
 lexer = lex.lex()
 
 # yacc code
-# exp -> expression
-# term -> terminal
 def p_exp_plus(p):
     'exp : exp PLUS term'
     p[0] = p[1] + p[3]
@@ -34,9 +39,33 @@ def p_exp_minus(p):
 def p_exp_term(p):
     'exp : term'
     p[0] = p[1]
+    
+def p_term_mul(p):
+    'term : term MULTIPLY factor'
+    p[0] = p[1] * p[3]
 
-def p_term_number(p):
-    'term : NUMBER'
+def p_term_div(p):
+    'term : term DIVIDE factor'
+    p[0] = p[1] / p[3]
+
+def p_term_factor(p):
+    'term : factor'
+    p[0] = p[1]
+
+def p_factor_powered(p):
+    'factor : subfactor POWERED factor'
+    p[0] = p[1] ** p[3]
+
+def p_factor_subfactor(p):
+    'factor : subfactor'
+    p[0] = p[1]
+
+def p_factor_paren(p):
+    'subfactor : LPAREN exp RPAREN'
+    p[0] = p[2]
+
+def p_subfactor_number(p):
+    'subfactor : NUMBER'
     p[0] = p[1]
 
 def p_error(p):
@@ -48,4 +77,5 @@ parser = yacc.yacc()
 def eval_exp(exp):
     return parser.parse(exp)
 
-print(eval_exp('196+204'))
+while True:
+    print(eval_exp(input('eval> ')))
