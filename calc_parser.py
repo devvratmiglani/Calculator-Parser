@@ -72,12 +72,10 @@ def p_error(p):
     print("Syntax error in input!")
 
 # parser
-parser = yacc.yacc()
-
-def eval_exp(exp):
-    return parser.parse(exp)
-
 if __name__ == '__main__':
+    parser = yacc.yacc()
+    def eval_exp(exp):
+        return parser.parse(exp)
 
     # import pickle
     # with open('parser.pickle', 'wb') as f:
