@@ -1,13 +1,47 @@
 # Calculator-Parser
 A Simple Calculator Parser written using Python Lex Yacc
 
-## Need
-It is made to use as an alsternate to using the eval function and th terminal prompt to evaluate expressions 
+## Usage
+It is made to use as an alternate to using the eval function and the terminal prompt to evaluate expressions.
+It requires Python!, in terminal run once
+```sh
+pip install ply
+```
+then to use the parser manually (maybe for testing et cetra)
+```sh
+python -u calc_parser.py
+```
+### Using as a Model
+Using the Parser in your application as given in calc_model_loader.py because it will reduce execution time
+```python
+import pickle
+from calc_parser import *
+
+# Load compiled parser from file 
+with open('parser.pickle', 'rb') as f:
+    parser = pickle.load(f)
+
+def eval_exp(exp):
+    return parser.parse(exp)
+
+print(eval_exp('10^3+400-63'))
+```
+### Dumping your Modified Model
+```python
+import pickle
+
+# Save compiled parser to file
+with open('parser.pickle', 'wb') as f:
+    pickle.dump(parser, f)
+
+```
+
 ## Precedence
 `()` > `^` > `* /` > `+ -`
 
 ## Grammar
-```sh
+
+```
 S' -> exp
 exp -> exp PLUS term
 exp -> exp MINUS term
@@ -25,7 +59,7 @@ Spaces and tabs are ignored
 
 ## Expressions cross-checked 
 
-### short
+### Short
 ```sh
 eval> (3 + 5) * (4 - 2^3) + 7
 -25
