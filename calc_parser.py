@@ -77,5 +77,11 @@ parser = yacc.yacc()
 def eval_exp(exp):
     return parser.parse(exp)
 
-while True:
-    print(eval_exp(input('eval> ')))
+if __name__ == '__main__':
+
+    # import pickle
+    # with open('parser.pickle', 'wb') as f:
+    #     pickle.dump(parser, f)
+
+    while True:
+        print(eval_exp(input('eval> ')))
